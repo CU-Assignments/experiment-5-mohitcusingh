@@ -1,0 +1,100 @@
+import java.io.*;
+import java.util.*;
+
+class Employee implements Serializable {
+    String name;
+    int id;
+    String designation;
+    double salary;
+
+    public Employee(String name, int id, String designation, double salary) {
+        this.name = name;
+        this.id = id;
+        this.designation = designation;
+        this.salary = salary;
+    }
+
+    public String toString() {
+        return "Employee{name='" + name + "', id=" + id + ", designation='" + designation + "', salary=" + salary + "}";
+    }
+}
+
+public class HardLevelEmployeeApp {
+    private static final String FILE_NAME = "employees.ser";
+    private static List<Employee> employees = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        loadEmployeesFromFile();
+
+        while (true) {
+            System.out.println("1. Add Employee");
+            System.out.println("2. Display All Employees");
+            System.out.println("3. Exit");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline character
+
+            switch (choice) {
+                case 1:
+                    addEmployee(scanner);
+                    break;
+                case 2:
+                    displayAllEmployees();
+                    break;
+                case 3:
+                    System.out.println("Exiting...");
+                    saveEmployeesToFile();
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+
+    public static void addEmployee(Scanner scanner) {
+        System.out.print("Enter employee name: ");
+        String name = scanner.nextLine();
+        System.out.print("Enter employee ID: ");
+        int id = scanner.nextInt();
+        scanner.nextLine(); // Consume newline character
+        System.out.print("Enter employee designation: ");
+        String designation = scanner.nextLine();
+        System.out.print("Enter employee salary: ");
+        double salary = scanner.nextDouble();
+        scanner.nextLine(); // Consume newline character
+
+        Employee employee = new Employee(name, id, designation, salary);
+        employees.add(employee);
+        System.out.println("Employee added successfully.");
+    }
+
+    public static void displayAllEmployees() {
+        if (employees.isEmpty()) {
+            System.out.println("No employees to display.");
+        } else {
+            System.out.println("All Employees:");
+            for (Employee employee : employees) {
+                System.out.println(employee);
+            }
+        }
+    }
+
+    public static void saveEmployeesToFile() {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            out.writeObject(employees);
+            System.out.println("Employees saved to file.");
+        } catch (IOException e) {
+            System.out.println("Error saving employees: " + e.getMessage());
+        }
+    }
+
+    public static void loadEmployeesFromFile() {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            employees = (List<Employee>) in.readObject();
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found, starting with empty list.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error loading employees: " + e.getMessage());
+        }
+    }
+}
