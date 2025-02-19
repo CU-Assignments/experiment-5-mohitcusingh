@@ -1,0 +1,23 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class EasyLevelSum {
+    public static void main(String[] args) {
+        List<Integer> numbers = new ArrayList<>();
+        numbers.add(5);
+        numbers.add(10);
+        numbers.add(15);
+        numbers.add(20);
+
+        int sum = calculateSum(numbers);
+        System.out.println("The sum of the list is: " + sum);
+    }
+
+    public static int calculateSum(List<Integer> numbers) {
+        int sum = 0;
+        for (Integer number : numbers) {
+            sum += number; // Unboxing happens here
+        }
+        return sum;
+    }
+}
